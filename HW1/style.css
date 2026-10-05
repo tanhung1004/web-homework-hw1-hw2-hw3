@@ -282,3 +282,15 @@ a {
     min-height: 70vh;
   }
 }
+
+/* KEYBOARD FOCUS */
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 3px solid #fbbf24;
+  outline-offset: 4px;
+  border-radius: 4px;
+}
