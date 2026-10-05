@@ -1,5 +1,4 @@
-const AudioContextClass =
-  window.AudioContext || window.webkitAudioContext;
+const AudioContextClass = window.AudioContext || window.webkitAudioContext;
 
 const audioContext = new AudioContextClass();
 
@@ -8,14 +7,12 @@ const audioContext = new AudioContextClass();
   This will be used for snare, hi-hat and clap sounds.
 */
 function createNoiseBuffer(duration = 0.3) {
-  const bufferSize = Math.floor(
-    audioContext.sampleRate * duration
-  );
+  const bufferSize = Math.floor(audioContext.sampleRate * duration);
 
   const buffer = audioContext.createBuffer(
     1,
     bufferSize,
-    audioContext.sampleRate
+    audioContext.sampleRate,
   );
 
   const data = buffer.getChannelData(0);
@@ -40,16 +37,10 @@ function playKick() {
   oscillator.type = "sine";
 
   oscillator.frequency.setValueAtTime(150, now);
-  oscillator.frequency.exponentialRampToValueAtTime(
-    45,
-    now + 0.45
-  );
+  oscillator.frequency.exponentialRampToValueAtTime(45, now + 0.45);
 
   gain.gain.setValueAtTime(1, now);
-  gain.gain.exponentialRampToValueAtTime(
-    0.001,
-    now + 0.45
-  );
+  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
 
   oscillator.connect(gain);
   gain.connect(audioContext.destination);
@@ -75,10 +66,7 @@ function playSnare() {
   noiseFilter.frequency.value = 1000;
 
   noiseGain.gain.setValueAtTime(0.7, now);
-  noiseGain.gain.exponentialRampToValueAtTime(
-    0.001,
-    now + 0.2
-  );
+  noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
 
   noise.connect(noiseFilter);
   noiseFilter.connect(noiseGain);
@@ -91,10 +79,7 @@ function playSnare() {
   oscillator.frequency.value = 180;
 
   oscillatorGain.gain.setValueAtTime(0.5, now);
-  oscillatorGain.gain.exponentialRampToValueAtTime(
-    0.001,
-    now + 0.12
-  );
+  oscillatorGain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
 
   oscillator.connect(oscillatorGain);
   oscillatorGain.connect(audioContext.destination);
@@ -123,10 +108,7 @@ function playHiHat() {
   filter.frequency.value = 7000;
 
   gain.gain.setValueAtTime(0.35, now);
-  gain.gain.exponentialRampToValueAtTime(
-    0.001,
-    now + 0.1
-  );
+  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
 
   noise.connect(filter);
   filter.connect(gain);
@@ -153,22 +135,13 @@ function playClap() {
   filter.frequency.value = 1400;
 
   gain.gain.setValueAtTime(0.8, now);
-  gain.gain.exponentialRampToValueAtTime(
-    0.2,
-    now + 0.03
-  );
+  gain.gain.exponentialRampToValueAtTime(0.2, now + 0.03);
 
   gain.gain.setValueAtTime(0.7, now + 0.05);
-  gain.gain.exponentialRampToValueAtTime(
-    0.2,
-    now + 0.08
-  );
+  gain.gain.exponentialRampToValueAtTime(0.2, now + 0.08);
 
   gain.gain.setValueAtTime(0.6, now + 0.1);
-  gain.gain.exponentialRampToValueAtTime(
-    0.001,
-    now + 0.25
-  );
+  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
 
   noise.connect(filter);
   filter.connect(gain);
@@ -216,4 +189,25 @@ drumPads.forEach((pad) => {
 
     playSound(soundName);
   });
+});
+/* =========================
+   KEYBOARD CONTROL
+========================= */
+
+document.addEventListener("keydown", (event) => {
+  if (event.repeat) {
+    return;
+  }
+
+  const pressedKey = event.key.toLowerCase();
+
+  const pad = document.querySelector(`.drum-pad[data-key="${pressedKey}"]`);
+
+  if (!pad) {
+    return;
+  }
+
+  const soundName = pad.dataset.sound;
+
+  playSound(soundName);
 });
