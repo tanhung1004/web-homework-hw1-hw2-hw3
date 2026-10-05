@@ -18,13 +18,10 @@ function formatTime(value) {
 }
 
 function updateCountdown() {
-  // Always get the real current time
   const now = Date.now();
 
-  // Calculate remaining time again on every update
   const remainingTime = eventTime - now;
 
-  // Event has finished
   if (remainingTime <= 0) {
     daysElement.textContent = "00";
     hoursElement.textContent = "00";
@@ -52,8 +49,107 @@ function updateCountdown() {
   secondsElement.textContent = formatTime(seconds);
 }
 
-// Run immediately when the page loads
 updateCountdown();
 
-// Refresh display every second
 const countdownInterval = setInterval(updateCountdown, 1000);
+
+/* =========================
+   SLICE 2
+   FORM STATE MACHINE
+========================= */
+
+const FORM_STATES = {
+  IDLE: "idle",
+  SUBMITTING: "submitting",
+  SUCCESS: "success",
+  ERROR: "error",
+};
+
+let formState = FORM_STATES.IDLE;
+
+const registrationForm = document.getElementById("registrationForm");
+
+const submitBtn = document.getElementById("submitBtn");
+
+const formStatus = document.getElementById("formStatus");
+
+/* =========================
+   UPDATE FORM UI
+========================= */
+
+function renderFormState() {
+  switch (formState) {
+    case FORM_STATES.IDLE:
+      formStatus.textContent = "Status: Idle";
+      submitBtn.textContent = "Register";
+      break;
+
+    case FORM_STATES.SUBMITTING:
+      formStatus.textContent = "Status: Submitting...";
+      submitBtn.textContent = "Submitting...";
+      break;
+
+    case FORM_STATES.SUCCESS:
+      formStatus.textContent = "Status: Success — Registration completed.";
+
+      submitBtn.textContent = "Register";
+      break;
+
+    case FORM_STATES.ERROR:
+      formStatus.textContent = "Status: Error — Registration failed.";
+
+      submitBtn.textContent = "Try Again";
+      break;
+
+    default:
+      formStatus.textContent = "Status: Idle";
+  }
+}
+
+/* =========================
+   CHANGE STATE
+========================= */
+
+function setFormState(newState) {
+  formState = newState;
+
+  renderFormState();
+}
+
+/* =========================
+   SIMULATED SUBMISSION
+========================= */
+
+function submitRegistration() {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, 1000);
+  });
+}
+
+/* =========================
+   FORM SUBMIT
+========================= */
+
+registrationForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  setFormState(FORM_STATES.SUBMITTING);
+
+  try {
+    await submitRegistration();
+
+    setFormState(FORM_STATES.SUCCESS);
+  } catch (error) {
+    console.error(error);
+
+    setFormState(FORM_STATES.ERROR);
+  }
+});
+
+/* =========================
+   INITIAL STATE
+========================= */
+
+setFormState(FORM_STATES.IDLE);
