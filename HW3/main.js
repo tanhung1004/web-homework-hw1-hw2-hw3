@@ -13,6 +13,8 @@ const hoursElement = document.getElementById("hours");
 const minutesElement = document.getElementById("minutes");
 const secondsElement = document.getElementById("seconds");
 
+let countdownInterval;
+
 function formatTime(value) {
   return String(value).padStart(2, "0");
 }
@@ -28,7 +30,9 @@ function updateCountdown() {
     minutesElement.textContent = "00";
     secondsElement.textContent = "00";
 
-    clearInterval(countdownInterval);
+    if (countdownInterval) {
+      clearInterval(countdownInterval);
+    }
 
     return;
   }
@@ -51,7 +55,7 @@ function updateCountdown() {
 
 updateCountdown();
 
-const countdownInterval = setInterval(updateCountdown, 1000);
+countdownInterval = setInterval(updateCountdown, 1000);
 
 /* =========================
    SLICE 2
@@ -73,6 +77,12 @@ const submitBtn = document.getElementById("submitBtn");
 
 const formStatus = document.getElementById("formStatus");
 
+const nameInput = document.getElementById("name");
+
+const emailInput = document.getElementById("email");
+
+let submittedName = "";
+
 /* =========================
    UPDATE FORM UI
 ========================= */
@@ -81,21 +91,26 @@ function renderFormState() {
   switch (formState) {
     case FORM_STATES.IDLE:
       formStatus.textContent = "Status: Idle";
+
       submitBtn.textContent = "Register";
       submitBtn.disabled = false;
+
       break;
 
     case FORM_STATES.SUBMITTING:
       formStatus.textContent = "Status: Submitting...";
+
       submitBtn.textContent = "Submitting...";
       submitBtn.disabled = true;
+
       break;
 
     case FORM_STATES.SUCCESS:
-      formStatus.textContent = "Status: Success — Registration completed.";
+      formStatus.textContent = `Status: Success — Registration completed for ${submittedName}.`;
 
       submitBtn.textContent = "Register";
       submitBtn.disabled = false;
+
       break;
 
     case FORM_STATES.ERROR:
@@ -103,10 +118,12 @@ function renderFormState() {
 
       submitBtn.textContent = "Try Again";
       submitBtn.disabled = false;
+
       break;
 
     default:
       formStatus.textContent = "Status: Idle";
+
       submitBtn.textContent = "Register";
       submitBtn.disabled = false;
   }
@@ -135,17 +152,58 @@ function submitRegistration() {
 }
 
 /* =========================
-   SLICE 3A
-   DOUBLE-SUBMIT PREVENTION
+   SLICE 3B
+   INPUT SANITIZATION
+========================= */
+
+function sanitizePlainText(value) {
+  return value
+    .trim()
+    .replace(/[<>]/g, "")
+    .replace(/[\u0000-\u001F\u007F]/g, "");
+}
+
+/* =========================
+   SLICE 3A + 3B
+   FORM SUBMISSION
 ========================= */
 
 registrationForm.addEventListener("submit", async (event) => {
   event.preventDefault();
 
-  // Prevent another submit while already submitting
+  /* -------------------------
+       DOUBLE-SUBMIT PREVENTION
+    ------------------------- */
+
   if (formState === FORM_STATES.SUBMITTING) {
     return;
   }
+
+  /* -------------------------
+       READ + SANITIZE INPUT
+    ------------------------- */
+
+  const safeName = sanitizePlainText(nameInput.value);
+
+  const safeEmail = sanitizePlainText(emailInput.value);
+
+  /* -------------------------
+       VALIDATE INPUT
+    ------------------------- */
+
+  if (!safeName || !safeEmail) {
+    formStatus.textContent = "Status: Error — Name and email are required.";
+
+    return;
+  }
+
+  if (!emailInput.validity.valid) {
+    formStatus.textContent = "Status: Error — Please enter a valid email.";
+
+    return;
+  }
+
+  submittedName = safeName;
 
   setFormState(FORM_STATES.SUBMITTING);
 
@@ -153,6 +211,8 @@ registrationForm.addEventListener("submit", async (event) => {
     await submitRegistration();
 
     setFormState(FORM_STATES.SUCCESS);
+
+    registrationForm.reset();
   } catch (error) {
     console.error(error);
 
