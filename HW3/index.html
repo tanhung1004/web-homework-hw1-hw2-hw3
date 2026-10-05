@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Event Hub</title>
+
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <main class="app">
+      <!-- HERO -->
+      <section class="hero">
+        <div class="container">
+          <p class="label">HW3 — Resilient Event Hub</p>
+
+          <h1>Web Development Event 2026</h1>
+
+          <p class="description">
+            Join our upcoming event and register to receive the latest updates.
+          </p>
+
+          <!-- Countdown Area -->
+          <div class="countdown">
+            <div class="time-box">
+              <span id="days">00</span>
+              <small>Days</small>
+            </div>
+
+            <div class="time-box">
+              <span id="hours">00</span>
+              <small>Hours</small>
+            </div>
+
+            <div class="time-box">
+              <span id="minutes">00</span>
+              <small>Minutes</small>
+            </div>
+
+            <div class="time-box">
+              <span id="seconds">00</span>
+              <small>Seconds</small>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- REGISTRATION -->
+      <section class="registration">
+        <div class="container">
+          <div class="form-card">
+            <h2>Register for the Event</h2>
+
+            <p>Enter your information below to register.</p>
+
+            <form id="registrationForm">
+              <div class="form-group">
+                <label for="name">Name</label>
+
+                <input
+                  id="name"
+                  name="name"
+                  type="text"
+                  autocomplete="name"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="email">Email</label>
+
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  autocomplete="email"
+                  required
+                />
+              </div>
+
+              <button id="submitBtn" type="submit">Register</button>
+
+              <p id="formStatus">Status: Idle</p>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="main.js" defer></script>
+  </body>
+</html>
