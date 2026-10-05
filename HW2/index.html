@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Drum Kit Engine</title>
+
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <main class="app">
+      <section class="drum-section">
+        <div class="container">
+          <p class="label">HW2 — Web Audio Engine</p>
+
+          <h1>Drum Kit</h1>
+
+          <p class="description">
+            Press a keyboard key or select a drum pad to play a sound.
+          </p>
+
+          <div class="drum-grid">
+            <button
+              class="drum-pad"
+              type="button"
+              data-key="a"
+              data-sound="kick"
+            >
+              <span class="key">A</span>
+              <span class="sound-name">Kick</span>
+            </button>
+
+            <button
+              class="drum-pad"
+              type="button"
+              data-key="s"
+              data-sound="snare"
+            >
+              <span class="key">S</span>
+              <span class="sound-name">Snare</span>
+            </button>
+
+            <button
+              class="drum-pad"
+              type="button"
+              data-key="d"
+              data-sound="hihat"
+            >
+              <span class="key">D</span>
+              <span class="sound-name">Hi-Hat</span>
+            </button>
+
+            <button
+              class="drum-pad"
+              type="button"
+              data-key="f"
+              data-sound="clap"
+            >
+              <span class="key">F</span>
+              <span class="sound-name">Clap</span>
+            </button>
+          </div>
+
+          <div class="contract-info">
+            <h2>Sound Contract</h2>
+
+            <p>
+              Keyboard bindings and sound names are defined directly in HTML
+              using <code>data-key</code> and <code>data-sound</code>.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
