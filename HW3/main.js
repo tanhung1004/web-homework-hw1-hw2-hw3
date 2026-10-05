@@ -82,27 +82,33 @@ function renderFormState() {
     case FORM_STATES.IDLE:
       formStatus.textContent = "Status: Idle";
       submitBtn.textContent = "Register";
+      submitBtn.disabled = false;
       break;
 
     case FORM_STATES.SUBMITTING:
       formStatus.textContent = "Status: Submitting...";
       submitBtn.textContent = "Submitting...";
+      submitBtn.disabled = true;
       break;
 
     case FORM_STATES.SUCCESS:
       formStatus.textContent = "Status: Success — Registration completed.";
 
       submitBtn.textContent = "Register";
+      submitBtn.disabled = false;
       break;
 
     case FORM_STATES.ERROR:
       formStatus.textContent = "Status: Error — Registration failed.";
 
       submitBtn.textContent = "Try Again";
+      submitBtn.disabled = false;
       break;
 
     default:
       formStatus.textContent = "Status: Idle";
+      submitBtn.textContent = "Register";
+      submitBtn.disabled = false;
   }
 }
 
@@ -129,11 +135,17 @@ function submitRegistration() {
 }
 
 /* =========================
-   FORM SUBMIT
+   SLICE 3A
+   DOUBLE-SUBMIT PREVENTION
 ========================= */
 
 registrationForm.addEventListener("submit", async (event) => {
   event.preventDefault();
+
+  // Prevent another submit while already submitting
+  if (formState === FORM_STATES.SUBMITTING) {
+    return;
+  }
 
   setFormState(FORM_STATES.SUBMITTING);
 
