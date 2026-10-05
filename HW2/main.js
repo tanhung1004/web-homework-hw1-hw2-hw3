@@ -178,7 +178,59 @@ async function playSound(soundName) {
 }
 
 /* =========================
-   CLICK TEST
+   FIFO BEAT RECORDER
+========================= */
+
+const beatQueue = [];
+
+let isRecording = false;
+let recordingStartTime = 0;
+
+const recordBtn = document.getElementById("recordBtn");
+const stopBtn = document.getElementById("stopBtn");
+const recordStatus = document.getElementById("recordStatus");
+
+function startRecording() {
+  beatQueue.length = 0;
+
+  isRecording = true;
+  recordingStartTime = performance.now();
+
+  recordBtn.disabled = true;
+  stopBtn.disabled = false;
+
+  recordStatus.textContent = "Recorder: Recording...";
+}
+
+function stopRecording() {
+  isRecording = false;
+
+  recordBtn.disabled = false;
+  stopBtn.disabled = true;
+
+  recordStatus.textContent = `Recorder: Stopped — ${beatQueue.length} beats`;
+
+  console.table(beatQueue);
+}
+
+function recordBeat(soundName) {
+  if (!isRecording) {
+    return;
+  }
+
+  const timestamp = performance.now() - recordingStartTime;
+
+  beatQueue.push({
+    sound: soundName,
+    timestamp: Math.round(timestamp),
+  });
+}
+
+recordBtn.addEventListener("click", startRecording);
+stopBtn.addEventListener("click", stopRecording);
+
+/* =========================
+   DRUM PAD CLICK
 ========================= */
 
 const drumPads = document.querySelectorAll(".drum-pad");
@@ -188,8 +240,10 @@ drumPads.forEach((pad) => {
     const soundName = pad.dataset.sound;
 
     playSound(soundName);
+    recordBeat(soundName);
   });
 });
+
 /* =========================
    KEYBOARD CONTROL
 ========================= */
@@ -210,4 +264,5 @@ document.addEventListener("keydown", (event) => {
   const soundName = pad.dataset.sound;
 
   playSound(soundName);
+  recordBeat(soundName);
 });
