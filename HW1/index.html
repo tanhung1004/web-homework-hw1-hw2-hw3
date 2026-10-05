@@ -4,6 +4,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+    <!-- M3: Strict Content Security Policy -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="
+        default-src 'self';
+        script-src 'self';
+        style-src 'self';
+        img-src 'self' data:;
+        font-src 'self';
+        object-src 'none';
+        base-uri 'self';
+      "
+    />
+
     <title>My Portfolio</title>
 
     <link rel="stylesheet" href="style.css" />
@@ -150,6 +164,7 @@
       </div>
     </footer>
 
-    <script src="main.js"></script>
+    <!-- External JavaScript only - no inline handlers -->
+    <script src="main.js" defer></script>
   </body>
 </html>
